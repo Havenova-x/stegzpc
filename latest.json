@@ -1,0 +1,22 @@
+{
+  "version": "1.0.0",
+  "released": "2026-10-21",
+  "mandatory": false,
+  "min_check_interval": 1200,
+  "notes": [
+    "First public release of StegZ",
+    "Hide files inside images, or pack them into .stegz archives",
+    "AES-256 passwords and self-destructing archives",
+    "Automatic updates with a non-intrusive install banner"
+  ],
+  "windows": {
+    "url": "https://github.com/Havenova-x/stegzpc/releases/download/v1.0.0/StegZ-Setup.exe",
+    "sha256": "c653471dd59eb831be2bbe007b3ae1a9339f82fa9d2577f6299cf5f0edd97bbd",
+    "size": 34852333
+  },
+  "android": {
+    "url": "",
+    "sha256": "",
+    "size": 0
+  }
+}

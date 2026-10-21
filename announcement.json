@@ -1,0 +1,13 @@
+{
+  "active": false,
+  "id": "2026-launch",
+  "title": "Welcome to StegZ",
+  "message": "Thanks for using StegZ!",
+  "level": "info",
+  "button": "",
+  "url": "",
+  "show_once": true,
+  "min_version": "",
+  "max_version": "",
+  "expires": ""
+}
