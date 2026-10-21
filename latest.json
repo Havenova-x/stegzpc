@@ -1,18 +1,19 @@
 {
-  "version": "1.0.0",
+  "version": "1.2.0",
   "released": "2026-10-21",
   "mandatory": false,
   "min_check_interval": 1200,
   "notes": [
-    "First public release of StegZ",
-    "Hide files inside images, or pack them into .stegz archives",
-    "AES-256 passwords and self-destructing archives",
-    "Automatic updates with a non-intrusive install banner"
+    "StegZ now opens ZIP, RAR, 7Z, TAR, GZ, BZ2, XZ, ISO, CAB and WIM archives",
+    "Windows right-click menu like WinRAR: Extract here, Extract to folder, Quick zip, Hide in an image",
+    "StegZ appears in Open with and in Windows Default apps for every archive type",
+    "Selecting many files and using the right-click menu now handles them all at once",
+    "Fixed hiding files in pictures and opening .stegz files; every result is verified after saving"
   ],
   "windows": {
-    "url": "https://github.com/Havenova-x/stegzpc/releases/download/v1.0.0/StegZ-Setup.exe",
-    "sha256": "c653471dd59eb831be2bbe007b3ae1a9339f82fa9d2577f6299cf5f0edd97bbd",
-    "size": 34852333
+    "url": "https://github.com/Havenova-x/stegzpc/releases/download/v1.2.0/StegZ-Setup.exe",
+    "sha256": "c97ba9dd834c241833683da1d367fe6dcb5f16d369c29509fb2ea290e75913e0",
+    "size": 38833274
   },
   "android": {
     "url": "",
