@@ -56,6 +56,25 @@ function initDownload(){
   if(/[?&]auto=1/.test(location.search)&&location.pathname.endsWith("download.html"))setTimeout(startDownload,900);
 }
 
+/* ---------- GitHub release download count ---------- */
+async function loadDownloadCount(){
+  const nodes=$$("[data-download-count]");
+  if(!nodes.length)return;
+  try{
+    const r=await fetch("https://api.github.com/repos/Havenova-x/stegzpc/releases?per_page=100",{
+      headers:{Accept:"application/vnd.github+json"},cache:"no-cache"
+    });
+    if(!r.ok)throw new Error("GitHub API unavailable");
+    const releases=await r.json();
+    const total=releases.reduce((sum,release)=>sum+(release.assets||[])
+      .filter(asset=>asset.name==="StegZ-Setup.exe")
+      .reduce((n,asset)=>n+(Number(asset.download_count)||0),0),0);
+    nodes.forEach(node=>{node.textContent=total.toLocaleString()+" downloads";});
+  }catch(e){
+    nodes.forEach(node=>{node.textContent="Download count unavailable";});
+  }
+}
+
 /* ---------- announcement strip ---------- */
 async function announce(){
   try{
@@ -102,5 +121,5 @@ async function initAndroid(){
     btn.addEventListener("click",e=>{e.preventDefault();startDownload({url:a.url,sha:a.sha256,size:a.size,name:"StegZ.apk"})});
   }catch(e){}
 }
-loadManifest().then(initDownload);initAndroid();announce();initSearch();
+loadManifest().then(initDownload);initAndroid();loadDownloadCount();announce();initSearch();
 })();
