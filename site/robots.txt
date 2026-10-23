@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://havenova-x.github.io/stegzpc/sitemap.xml
