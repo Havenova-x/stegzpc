@@ -1,32 +1,13 @@
 {
-  "announcements": [
-    {
-      "active": true,
-      "id": "2026-10-21-v1.2.0",
-      "platform": "windows",
-      "title": "What's new in StegZ 1.2",
-      "message": "\u2022 New file-manager design: browse every drive and folder\n\u2022 Opens ZIP, RAR, 7Z, TAR, GZ, ISO and more\n\u2022 WinRAR-style right-click menu: Extract here, Extract to folder, Quick zip\n\u2022 Password toggle with AES-256\n\u2022 Smarter self-destruct: date, open limit, or timer after first open\n\u2022 Built-in Help guide: press F1",
-      "level": "success",
-      "button": "See all features",
-      "url": "https://stegz.vercel.app/",
-      "show_once": true,
-      "min_version": "",
-      "max_version": "",
-      "expires": ""
-    },
-    {
-      "active": false,
-      "id": "2026-android-launch",
-      "platform": "android",
-      "title": "StegZ for Android is here",
-      "message": "Hide files inside pictures, lock them with a password, or make them self-destruct - now on your phone. Files work on both Android and Windows.",
-      "level": "success",
-      "button": "Open the website",
-      "url": "https://stegz.vercel.app/",
-      "show_once": true,
-      "min_version": "",
-      "max_version": "",
-      "expires": ""
-    }
-  ]
+  "active": true,
+  "id": "2026-10-21-v1.2.0",
+  "title": "StegZ 1.2 opens your archives",
+  "message": "StegZ now opens ZIP, RAR, 7Z, TAR and more, and adds a WinRAR-style right-click menu: Extract here, Extract to folder, Quick zip and Hide in an image. Press F1 for the Help guide. MOBILE COMING SOON...",
+  "level": "info",
+  "button": "Open the website",
+  "url": "https://havenova-x.github.io/stegzpc/",
+  "show_once": true,
+  "min_version": "",
+  "max_version": "",
+  "expires": ""
 }
