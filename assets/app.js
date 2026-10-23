@@ -1,106 +1,187 @@
 (()=>{"use strict";
-const B=document.body.dataset,$=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
-let MAN=null;
+const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
+const REPO="Havenova-x/stegzpc",REL="https://github.com/"+REPO+"/releases/";
+const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+const ua=navigator.userAgent||"";
+const platform=/Android/i.test(ua)?"android":/Windows/i.test(ua)?"pc":"other";
+const root=document.documentElement;
+const wait=ms=>new Promise(r=>setTimeout(r,reduce?Math.min(ms,120):ms));
+const fmtMB=n=>n?(n/1048576).toFixed(1)+" MB":"";
+const fmtN=n=>new Intl.NumberFormat().format(n);
 
-/* ---------- manifest (version, size, sha) ---------- */
-async function loadManifest(){
-  try{const r=await fetch("latest.json",{cache:"no-cache"});if(r.ok)MAN=await r.json();}catch(e){}
-  if(!MAN)return;
-  $$("[data-ver]").forEach(e=>e.textContent=MAN.version||"");
-  const w=MAN.windows||{};
-  $$("[data-size]").forEach(e=>e.textContent=w.size?(w.size/1048576).toFixed(1)+" MB":"");
-  $$("[data-sha]").forEach(e=>e.textContent=w.sha256||"n/a");
-  $$("[data-rel]").forEach(e=>e.textContent=MAN.released?"· "+MAN.released:"");
-  const n=$("#notes");if(n&&MAN.notes)n.innerHTML=MAN.notes.map(x=>"<li>"+x.replace(/[<>&]/g,c=>({"<":"&lt;",">":"&gt;","&":"&amp;"}[c]))+"</li>").join("");
-  const url=winUrl();if($("#dl-btn")){$("#dl-btn").href=url;$("#dl-direct").href=url;}
+/* ---------- theme ---------- */
+function setTheme(t,save){
+  root.dataset.theme=t;
+  const m=$('meta[name="theme-color"]');if(m)m.content=t==="dark"?"#070b12":"#f6f8fb";
+  const b=$("#theme");if(b)b.setAttribute("aria-label",t==="dark"?"Switch to light mode":"Switch to dark mode");
+  if(save)try{localStorage.setItem("theme",t)}catch(e){}
 }
-function winUrl(){
-  const w=(MAN&&MAN.windows)||{};
-  if(w.url)return w.url;
-  if(MAN&&MAN.version)return B.releaseBase+"v"+MAN.version+"/"+B.installer;
-  return B.fallback;
-}
+setTheme(root.dataset.theme||"light");
+$("#theme")?.addEventListener("click",()=>setTheme(root.dataset.theme==="dark"?"light":"dark",true));
+matchMedia("(prefers-color-scheme: dark)").addEventListener?.("change",e=>{let s=null;try{s=localStorage.getItem("theme")}catch(x){}if(!s)setTheme(e.matches?"dark":"light")});
 
-/* ---------- in-page download with progress ---------- */
-function setStatus(t){const s=$("#dl-status");if(s)s.textContent=t}
-function bar(p){const b=$("#dl-bar");if(!b)return;b.hidden=false;b.firstElementChild.style.width=Math.round(p*100)+"%"}
-function save(blob,name){const u=URL.createObjectURL(blob),a=document.createElement("a");a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),30000)}
-function direct(url){const a=document.createElement("a");a.href=url;a.rel="noopener";document.body.appendChild(a);a.click();a.remove()}
-let busy=false;
-async function startDownload(tg){
-  if(busy)return;busy=true;
-  const w=(MAN&&MAN.windows)||{};tg=tg||{url:winUrl(),sha:w.sha256,size:w.size,name:B.installer};const url=tg.url;
-  setStatus("Starting download…");bar(0);
-  try{
-    const r=await fetch(url,{mode:"cors"});if(!r.ok||!r.body)throw 0;
-    const total=+r.headers.get("content-length")||tg.size||0,rd=r.body.getReader(),parts=[];let got=0;
-    for(;;){const {done,value}=await rd.read();if(done)break;parts.push(value);got+=value.length;
-      if(total){bar(got/total);setStatus("Downloading… "+Math.round(got/total*100)+"%  ("+(got/1048576).toFixed(1)+" MB)")}
-      else setStatus("Downloading… "+(got/1048576).toFixed(1)+" MB")}
-    const blob=new Blob(parts,{type:"application/octet-stream"});bar(1);
-    let msg="Downloaded. Open the file to install.";
-    if(tg.sha&&crypto.subtle&&blob.size<400e6){
-      const h=[...new Uint8Array(await crypto.subtle.digest("SHA-256",await blob.arrayBuffer()))].map(b=>b.toString(16).padStart(2,"0")).join("");
-      if(h!==tg.sha.toLowerCase()){setStatus("Checksum mismatch - file discarded. Please retry.");busy=false;return}
-      msg="Downloaded and checksum verified ✓ Open the file to install.";
-    }
-    save(blob,tg.name);setStatus(msg);
-  }catch(e){
-    bar(1);setStatus("Download started by your browser - watch its download bar.");direct(url);
+/* ---------- menu ---------- */
+const menu=$("#menu"),nav=$("#nav");
+menu?.addEventListener("click",()=>{const o=nav.classList.toggle("open");menu.setAttribute("aria-expanded",o)});
+nav?.addEventListener("click",e=>{if(e.target.closest("a")){nav.classList.remove("open");menu?.setAttribute("aria-expanded","false")}});
+
+/* ---------- scroll reveal ---------- */
+if("IntersectionObserver"in window){
+  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target)}}),{rootMargin:"0px 0px -8% 0px"});
+  $$("[data-r]").forEach(el=>io.observe(el));
+}else $$("[data-r]").forEach(el=>el.classList.add("in"));
+
+/* ---------- smart button label ---------- */
+$$("[data-smart]").forEach(el=>{
+  if(platform==="pc")el.firstChild.textContent="Download for Windows";
+  else if(platform==="android")el.firstChild.textContent="Download for Android";
+});
+
+/* ---------- release data ---------- */
+const T={
+  windows:{name:"StegZ-Setup.exe",url:REL+"latest/download/StegZ-Setup.exe",size:0,sha:"",ver:"",notes:[]},
+  android:{name:"StegZ.apk",url:"",size:0,sha:"",ver:""}
+};
+const getJSON=async u=>{try{const r=await fetch(u,{cache:"no-cache"});return r.ok?await r.json():null}catch(e){return null}};
+const ready=Promise.all([getJSON("latest.json"),getJSON("android.json")]).then(([m,a])=>{
+  if(m){
+    const w=m.windows||{};
+    T.windows.ver=m.version||"";T.windows.size=w.size||0;T.windows.sha=w.sha256||"";T.windows.notes=m.notes||[];
+    T.windows.url=w.url||(m.version?REL+"download/v"+m.version+"/StegZ-Setup.exe":T.windows.url);
   }
-  busy=false;
-}
-function initDownload(){
-  const b=$("#dl-btn");if(!b)return;
-  b.addEventListener("click",e=>{e.preventDefault();startDownload()});
-  if(/[?&]auto=1/.test(location.search)&&location.pathname.endsWith("download.html"))setTimeout(startDownload,900);
-}
+  if(a&&a.url){T.android.url=a.url;T.android.ver=a.version||"";T.android.size=a.size||0;T.android.sha=a.sha256||""}
+});
 
-/* ---------- announcement strip ---------- */
-async function announce(){
+/* ---------- download counts (GitHub public API, cached) ---------- */
+async function counts(){
+  const K="stegz-dl",now=Date.now();let c=null;
+  try{c=JSON.parse(localStorage.getItem(K))}catch(e){}
+  if(c&&now-c.t<18e5)return c;
   try{
-    const r=await fetch("announcement.json",{cache:"no-cache"});if(!r.ok)return;const a=await r.json();
-    if(!a.active||!(a.message||a.title))return;
-    const id=a.id||"x";if(sessionStorage.getItem("ann-"+id))return;
-    const el=$("#ann");el.textContent=[a.title,a.message].filter(Boolean).join(" - ");
-    if(a.url&&/^https?:/.test(a.url)){const l=document.createElement("a");l.href=a.url;l.textContent=" "+(a.button||"Learn more");el.append(l)}
-    const x=document.createElement("button");x.textContent="✕";x.setAttribute("aria-label","Dismiss");x.onclick=()=>{el.hidden=true;try{sessionStorage.setItem("ann-"+id,1)}catch(e){}};
-    el.append(x);el.hidden=false;
-  }catch(e){}
+    const r=await fetch("https://api.github.com/repos/"+REPO+"/releases?per_page=100",{headers:{Accept:"application/vnd.github+json"}});
+    if(!r.ok)throw 0;
+    let w=0,a=0;
+    for(const rel of await r.json())for(const s of rel.assets||[]){
+      const n=(s.name||"").toLowerCase();
+      if(n.endsWith(".exe"))w+=s.download_count|0;else if(n.endsWith(".apk"))a+=s.download_count|0;
+    }
+    c={t:now,w,a};try{localStorage.setItem(K,JSON.stringify(c))}catch(e){}
+    return c;
+  }catch(e){return c}
 }
+function countUp(el,to){
+  const box=el.closest(".count");box&&box.classList.add("on");
+  if(reduce||to<2){el.textContent=fmtN(to);return}
+  const t0=performance.now(),d=1100;
+  (function f(t){const p=Math.min(1,(t-t0)/d),e=1-Math.pow(1-p,3);el.textContent=fmtN(Math.round(to*e));if(p<1)requestAnimationFrame(f)})(t0);
+}
+if($("[data-count]"))counts().then(c=>{
+  if(!c)return;
+  const v={total:c.w+c.a,win:c.w,android:c.a};
+  $$("[data-count]").forEach(el=>{const n=v[el.dataset.count];if(n!=null)countUp(el,n)});
+});
 
-/* ---------- instant search (typo tolerant) ---------- */
-let IDX=[];
-const lev1=(a,b)=>{if(Math.abs(a.length-b.length)>1)return false;let i=0,j=0,d=0;while(i<a.length&&j<b.length){if(a[i]===b[j]){i++;j++;continue}if(++d>1)return false;
-  if(a.length>b.length)i++;else if(a.length<b.length)j++;else{i++;j++}}return d+(a.length-i)+(b.length-j)<=1};
-function score(it,q){const t=it.t.toLowerCase(),k=it.k.toLowerCase(),all=t+" "+k+" "+it.d.toLowerCase(),words=all.split(/[^a-z0-9.]+/);let s=0;
-  for(const w of q){if(t.includes(w))s+=5;else if(k.includes(w))s+=3;else if(all.includes(w))s+=1;else if(w.length>=4&&words.some(x=>x.length>=3&&lev1(x,w)))s+=1;else return 0}return s}
-async function initSearch(){
-  const q=$("#q"),ul=$("#results");if(!q)return;let cur=-1,list=[];
-  try{IDX=await (await fetch("search-index.json",{cache:"no-cache"})).json()}catch(e){}
-  const esc=s=>s.replace(/[<>&"]/g,c=>({"<":"&lt;",">":"&gt;","&":"&amp;",'"':"&quot;"}[c]));
-  function render(){
-    const terms=q.value.toLowerCase().split(/\s+/).filter(Boolean);
-    if(!terms.length){ul.hidden=true;return}
-    list=IDX.map(i=>[score(i,terms),i]).filter(x=>x[0]).sort((a,b)=>b[0]-a[0]).slice(0,8).map(x=>x[1]);cur=-1;
-    ul.innerHTML=list.length?list.map((i,n)=>`<li data-n="${n}"><a href="${i.u}">${esc(i.t)}<small>${esc(i.d)}</small></a></li>`).join(""):"<li><a>No match - try “download” or “compress”</a></li>";
-    ul.hidden=false}
-  q.addEventListener("input",render);q.addEventListener("focus",render);
-  q.addEventListener("keydown",e=>{const li=[...ul.children];
-    if(e.key==="ArrowDown"||e.key==="ArrowUp"){e.preventDefault();cur=(cur+(e.key==="ArrowDown"?1:-1)+li.length)%li.length;li.forEach((x,n)=>x.classList.toggle("on",n===cur))}
-    else if(e.key==="Enter"){const t=list[Math.max(cur,0)];if(t)location.href=t.u}
-    else if(e.key==="Escape"){ul.hidden=true;q.blur()}});
-  document.addEventListener("click",e=>{if(!e.target.closest(".search"))ul.hidden=true});
-  document.addEventListener("keydown",e=>{if(e.key==="/"&&!/INPUT|TEXTAREA/.test(document.activeElement.tagName)){e.preventDefault();q.focus()}});
+/* ---------- download page ---------- */
+const grid=$(".platforms");
+if(grid){
+  grid.dataset.platform=platform;
+  const cw=$("#card-windows"),ca=$("#card-android");
+  const hint=$("#hint");
+  if(platform==="pc"||platform==="android"){
+    const first=platform==="pc"?cw:ca,second=platform==="pc"?ca:cw;
+    first.classList.add("is-primary");second.classList.add("is-secondary");
+    hint.textContent=platform==="pc"?"You're on a Windows PC, so the Windows installer is first.":"You're on an Android device, so the Android app is first.";
+  }else hint.textContent="StegZ is available for Windows and Android. Choose the one that matches your device.";
+  hint.classList.add("on");
+
+  const put=(id,v)=>{const e=$("#"+id);if(e)e.textContent=v};
+  ready.then(()=>{
+    const w=T.windows,a=T.android;
+    put("win-sub",["Windows 10 and 11",w.ver&&"Version "+w.ver,fmtMB(w.size)].filter(Boolean).join("  ·  "));
+    if(w.sha){$("#win-sha").hidden=false;put("win-sha-v",w.sha)}
+    if(w.notes.length){const d=$("#notes-box");d.hidden=false;put("notes-ver",w.ver);const ul=$("#notes");w.notes.forEach(n=>{const li=document.createElement("li");li.textContent=n;ul.append(li)})}
+    if(a.url){
+      put("an-sub",["Android phones and tablets (APK)",a.ver&&"Version "+a.ver,fmtMB(a.size)].filter(Boolean).join("  ·  "));
+      if(a.sha){$("#an-sha").hidden=false;put("an-sha-v",a.sha)}
+    }else{
+      put("an-sub","Android app · coming soon");
+      const b=$("#btn-android");b.setAttribute("aria-disabled","true");b.lastChild.textContent="Coming soon";
+    }
+  });
+
+  $$("[data-copy]").forEach(b=>b.addEventListener("click",async()=>{
+    const t=$("#"+b.dataset.copy).textContent;
+    try{await navigator.clipboard.writeText(t);b.textContent="Copied";setTimeout(()=>b.textContent="Copy",1600)}catch(e){}
+  }));
+
+  /* mismatch popup */
+  const dlg=$("#warn");
+  const mismatch=t=>t==="android"?platform!=="android":platform!=="pc";
+  function ask(t){
+    const other=t==="android"?"windows":"android";
+    const copy={
+      "android-pc":["You're on a computer, but this is the Android version of StegZ (an APK). It installs only on Android phones and tablets and will not run on Windows. To use StegZ on this PC, download the Windows installer instead.","Get the Windows version"],
+      "windows-android":["You're on an Android device, but this is the Windows installer (.exe). It will not run on a phone or tablet. To use StegZ here, download the Android app instead.","Get the Android version"],
+      "android-other":["This is the Android version of StegZ (an APK). It installs only on Android phones and tablets, and your device doesn't look like one.",""],
+      "windows-other":["This is the Windows installer (.exe). It runs only on Windows 10 and 11, and your device doesn't look like a Windows PC.",""]
+    }[t+"-"+(platform==="pc"?"pc":platform==="android"?"android":"other")];
+    $("#warn-text").textContent=copy[0];
+    const sw=$("#warn-switch");sw.hidden=!copy[1];sw.textContent=copy[1];sw.value=other;
+    dlg.returnValue="";
+    return new Promise(res=>{
+      dlg.addEventListener("close",()=>res(dlg.returnValue),{once:true});
+      dlg.showModal();
+    });
+  }
+  dlg.addEventListener("click",e=>{if(e.target===dlg)dlg.close("cancel")});
+
+  /* preparing + download */
+  let busy=false;
+  async function request(t,auto){
+    if(busy)return;
+    if(mismatch(t)){
+      if(auto)return;
+      const r=await ask(t);
+      if(r==="windows"||r==="android")return request(r,false);
+      if(r!=="ok")return;
+    }
+    run(t);
+  }
+  async function run(t){
+    busy=true;
+    const card=t==="android"?ca:cw,btn=$(".btn",card),p=$(".prep",card),lis=$$("ol li",p),bar=$(".pbar i",p),res=$(".res",p);
+    btn.setAttribute("aria-disabled","true");
+    res.hidden=true;res.className="res";p.hidden=false;
+    const mark=i=>{lis.forEach((l,n)=>l.className=n<i?"done":n===i?"active":"");bar.style.width=Math.min(100,(i+.6)/lis.length*100)+"%"};
+    p.scrollIntoView({behavior:reduce?"auto":"smooth",block:"nearest"});
+    mark(0);await ready;await wait(650);
+    const g=T[t];
+    mark(1);await wait(750);
+    const ok=g.url.startsWith(REL)&&/^https:\/\/github\.com\//.test(g.url);
+    if(!ok){
+      lis.forEach(l=>l.className="");bar.style.width="0";
+      res.className="res err";res.hidden=false;res.innerHTML="";
+      const b=document.createElement("b");b.textContent="We couldn't confirm the download link.";
+      const a=document.createElement("a");a.href=REL;a.textContent="Open the releases page";a.rel="noopener";
+      res.append(b,"Please try again, or ",a,".");
+      btn.removeAttribute("aria-disabled");busy=false;return;
+    }
+    mark(2);await wait(600);
+    const a=document.createElement("a");a.href=g.url;a.rel="noopener";a.download=g.name;document.body.append(a);a.click();a.remove();
+    mark(3);
+    res.hidden=false;res.innerHTML="";
+    const b=document.createElement("b");b.textContent="Your download has started.";
+    const again=document.createElement("a");again.href=g.url;again.rel="noopener";again.textContent="Download again";
+    res.append(b,g.name+(g.size?" ("+fmtMB(g.size)+"). ":". ")+"Check your browser's downloads. Nothing happening? ",again,".");
+    btn.removeAttribute("aria-disabled");busy=false;
+  }
+  $("#btn-windows").addEventListener("click",e=>{e.preventDefault();request("windows")});
+  $("#btn-android").addEventListener("click",e=>{e.preventDefault();if($("#btn-android").getAttribute("aria-disabled")!=="true")request("android")});
+
+  if(/[?&]auto=1/.test(location.search)){
+    history.replaceState(null,"",location.pathname);
+    if(platform==="pc")setTimeout(()=>request("windows",true),500);
+    else if(platform==="android")setTimeout(()=>request("android",true),500);
+  }
 }
-async function initAndroid(){
-  const btn=$("#an-btn");if(!btn)return;
-  try{const r=await fetch("android.json",{cache:"no-cache"});if(!r.ok)throw 0;const a=await r.json();if(!a.url)throw 0;
-    btn.href=a.url;btn.hidden=false;$("#an-soon").hidden=true;$("#an-meta").hidden=false;
-    $$("[data-av]").forEach(e=>e.textContent=a.version||"");$$("[data-asize]").forEach(e=>e.textContent=a.size?(a.size/1048576).toFixed(1)+" MB":"");
-    $$("[data-asha]").forEach(e=>e.textContent=a.sha256||"n/a");
-    btn.addEventListener("click",e=>{e.preventDefault();startDownload({url:a.url,sha:a.sha256,size:a.size,name:"StegZ.apk"})});
-  }catch(e){}
-}
-loadManifest().then(initDownload);initAndroid();announce();initSearch();
 })();
