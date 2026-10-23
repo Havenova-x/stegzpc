@@ -13,7 +13,6 @@ async function loadManifest(){
   $$("[data-rel]").forEach(e=>e.textContent=MAN.released?"· "+MAN.released:"");
   const n=$("#notes");if(n&&MAN.notes)n.innerHTML=MAN.notes.map(x=>"<li>"+x.replace(/[<>&]/g,c=>({"<":"&lt;",">":"&gt;","&":"&amp;"}[c]))+"</li>").join("");
   const url=winUrl();if($("#dl-btn")){$("#dl-btn").href=url;$("#dl-direct").href=url;}
-  const a=MAN.android;if(a&&a.url&&$("#android-row")){$("#android-row").hidden=false;$("#dl-android").href=a.url;}
 }
 function winUrl(){
   const w=(MAN&&MAN.windows)||{};
@@ -28,24 +27,24 @@ function bar(p){const b=$("#dl-bar");if(!b)return;b.hidden=false;b.firstElementC
 function save(blob,name){const u=URL.createObjectURL(blob),a=document.createElement("a");a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),30000)}
 function direct(url){const a=document.createElement("a");a.href=url;a.rel="noopener";document.body.appendChild(a);a.click();a.remove()}
 let busy=false;
-async function startDownload(){
+async function startDownload(tg){
   if(busy)return;busy=true;
-  const url=winUrl(),w=(MAN&&MAN.windows)||{};
+  const w=(MAN&&MAN.windows)||{};tg=tg||{url:winUrl(),sha:w.sha256,size:w.size,name:B.installer};const url=tg.url;
   setStatus("Starting download…");bar(0);
   try{
     const r=await fetch(url,{mode:"cors"});if(!r.ok||!r.body)throw 0;
-    const total=+r.headers.get("content-length")||w.size||0,rd=r.body.getReader(),parts=[];let got=0;
+    const total=+r.headers.get("content-length")||tg.size||0,rd=r.body.getReader(),parts=[];let got=0;
     for(;;){const {done,value}=await rd.read();if(done)break;parts.push(value);got+=value.length;
       if(total){bar(got/total);setStatus("Downloading… "+Math.round(got/total*100)+"%  ("+(got/1048576).toFixed(1)+" MB)")}
       else setStatus("Downloading… "+(got/1048576).toFixed(1)+" MB")}
     const blob=new Blob(parts,{type:"application/octet-stream"});bar(1);
     let msg="Downloaded. Open the file to install.";
-    if(w.sha256&&crypto.subtle&&blob.size<400e6){
+    if(tg.sha&&crypto.subtle&&blob.size<400e6){
       const h=[...new Uint8Array(await crypto.subtle.digest("SHA-256",await blob.arrayBuffer()))].map(b=>b.toString(16).padStart(2,"0")).join("");
-      if(h!==w.sha256.toLowerCase()){setStatus("Checksum mismatch - file discarded. Please retry.");busy=false;return}
+      if(h!==tg.sha.toLowerCase()){setStatus("Checksum mismatch - file discarded. Please retry.");busy=false;return}
       msg="Downloaded and checksum verified ✓ Open the file to install.";
     }
-    save(blob,B.installer);setStatus(msg);
+    save(blob,tg.name);setStatus(msg);
   }catch(e){
     bar(1);setStatus("Download started by your browser - watch its download bar.");direct(url);
   }
@@ -55,24 +54,6 @@ function initDownload(){
   const b=$("#dl-btn");if(!b)return;
   b.addEventListener("click",e=>{e.preventDefault();startDownload()});
   if(/[?&]auto=1/.test(location.search)&&location.pathname.endsWith("download.html"))setTimeout(startDownload,900);
-}
-
-
-/* ---------- GitHub release download count ---------- */
-async function loadDownloadCount(){
-  const nodes=$$("[data-download-count]");
-  if(!nodes.length)return;
-  try{
-    const r=await fetch("https://api.github.com/repos/Havenova-x/stegzpc/releases?per_page=100",{headers:{Accept:"application/vnd.github+json"},cache:"no-cache"});
-    if(!r.ok)throw new Error("GitHub API unavailable");
-    const releases=await r.json();
-    const total=releases.reduce((sum,release)=>sum+(release.assets||[])
-      .filter(asset=>asset.name==="StegZ-Setup.exe")
-      .reduce((n,asset)=>n+(Number(asset.download_count)||0),0),0);
-    nodes.forEach(node=>{node.textContent=total.toLocaleString()+" downloads";});
-  }catch(e){
-    nodes.forEach(node=>{node.textContent="Download count unavailable";});
-  }
 }
 
 /* ---------- announcement strip ---------- */
@@ -112,5 +93,14 @@ async function initSearch(){
   document.addEventListener("click",e=>{if(!e.target.closest(".search"))ul.hidden=true});
   document.addEventListener("keydown",e=>{if(e.key==="/"&&!/INPUT|TEXTAREA/.test(document.activeElement.tagName)){e.preventDefault();q.focus()}});
 }
-loadManifest().then(initDownload);loadDownloadCount();announce();initSearch();
+async function initAndroid(){
+  const btn=$("#an-btn");if(!btn)return;
+  try{const r=await fetch("android.json",{cache:"no-cache"});if(!r.ok)throw 0;const a=await r.json();if(!a.url)throw 0;
+    btn.href=a.url;btn.hidden=false;$("#an-soon").hidden=true;$("#an-meta").hidden=false;
+    $$("[data-av]").forEach(e=>e.textContent=a.version||"");$$("[data-asize]").forEach(e=>e.textContent=a.size?(a.size/1048576).toFixed(1)+" MB":"");
+    $$("[data-asha]").forEach(e=>e.textContent=a.sha256||"n/a");
+    btn.addEventListener("click",e=>{e.preventDefault();startDownload({url:a.url,sha:a.sha256,size:a.size,name:"StegZ.apk"})});
+  }catch(e){}
+}
+loadManifest().then(initDownload);initAndroid();announce();initSearch();
 })();

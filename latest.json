@@ -1,6 +1,6 @@
 {
   "version": "1.2.0",
-  "released": "2026-10-21",
+  "released": "2026-10-20",
   "mandatory": false,
   "min_check_interval": 1200,
   "notes": [
@@ -12,8 +12,8 @@
   ],
   "windows": {
     "url": "https://github.com/Havenova-x/stegzpc/releases/download/v1.2.0/StegZ-Setup.exe",
-    "sha256": "c97ba9dd834c241833683da1d367fe6dcb5f16d369c29509fb2ea290e75913e0",
-    "size": 38833274
+    "sha256": "",
+    "size": 0
   },
   "android": {
     "url": "",
