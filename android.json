@@ -1,8 +1,8 @@
 {
-  "version": "1.1.2",
-  "versionCode": 10007,
-  "url": "https://github.com/Havenova-x/stegzpc/releases/download/android-v1.1.2/StegZ.apk",
-  "sha256": "9df0c7c4c4b721500e374edac9c576676668780a428a8675a6b6ea097c4d5662",
-  "size": 36676555,
-  "released": "2026-10-23"
+  "version": "1.1.5",
+  "versionCode": 10009,
+  "url": "https://github.com/Havenova-x/stegzpc/releases/download/android-v1.1.5/StegZ.apk",
+  "sha256": "99b1d05c5964decfd86d2a2b71a9c6bf968b5763bd177658e1cdb6f6d353437d",
+  "size": 36527607,
+  "released": "2026-10-24"
 }
