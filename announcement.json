@@ -1,13 +1,32 @@
 {
-  "active": true,
-  "id": "2026-10-21-v1.3.0",
-  "title": "StegZ 1.2 opens your archives",
-  "message": "StegZ now opens ZIP, RAR, 7Z, TAR and more, and adds a styled right-click menu: Extract here, Extract to folder, Quick zip and Hide in an image. Press F1 for the Help guide. MOBILE NOW AVAILABLE",
-  "level": "info",
-  "button": "Open the website",
-  "url": "https://stegzpc.vercel.app/",
-  "show_once": true,
-  "min_version": "",
-  "max_version": "",
-  "expires": ""
+  "announcements": [
+    {
+      "active": true,
+      "id": "2026-10-23-v1.3.0",
+      "platform": "windows",
+      "title": "StegZ 1.3 is here",
+      "message": "\u2022 Text & code editor with colour highlighting (select a file, press Edit)\n\u2022 Preview pictures and text inside archives without extracting\n\u2022 Archives now open and list instantly\n\u2022 Faster update checks\nTip: press F1 for the Help guide.",
+      "level": "success",
+      "button": "See what's new",
+      "url": "https://stegzpc.vercel.app/",
+      "show_once": true,
+      "min_version": "",
+      "max_version": "",
+      "expires": ""
+    },
+    {
+      "active": true,
+      "id": "2026-10-25-android-1.3.0",
+      "platform": "android",
+      "title": "StegZ for Android 1.3",
+      "message": "\u2022 Real file-manager engine: folders open instantly\n\u2022 File access is now checked live - the app locks until access is allowed\n\u2022 Save and extract into any folder on your phone\n\u2022 Text & code editor with colours\n\u2022 Preview files inside archives without extracting\n\u2022 Safer buttons, pull-to-refresh and faster lists\nMade by Havenova X - havenovax.name.ng",
+      "level": "success",
+      "button": "Get the update",
+      "url": "https://stegzpc.vercel.app/",
+      "show_once": true,
+      "min_version": "",
+      "max_version": "1.2.1",
+      "expires": ""
+    }
+  ]
 }
