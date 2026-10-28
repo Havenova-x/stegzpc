@@ -2,10 +2,10 @@
   "announcements": [
     {
       "active": true,
-      "id": "2026-10-23-v1.3.0",
+      "id": "2026-10-26-v1.4.0",
       "platform": "windows",
-      "title": "StegZ 1.3 is here",
-      "message": "\u2022 Text & code editor with colour highlighting (select a file, press Edit)\n\u2022 Preview pictures and text inside archives without extracting\n\u2022 Archives now open and list instantly\n\u2022 Faster update checks\nTip: press F1 for the Help guide.",
+      "title": "StegZ 1.4 for Windows",
+      "message": "\u2022 Credits to Havenova X in Settings (click to visit)\n\u2022 \"Don't show this again\" on announcements\n\u2022 Ad banner support under the toolbar\n\u2022 Text editor, archive previews and instant archive opening\nTip: press F1 for the Help guide.",
       "level": "success",
       "button": "See what's new",
       "url": "https://stegzpc.vercel.app/",
@@ -16,16 +16,16 @@
     },
     {
       "active": true,
-      "id": "2026-10-25-android-1.3.0",
+      "id": "2026-10-26-android-1.4.0",
       "platform": "android",
-      "title": "StegZ for Android 1.3",
-      "message": "\u2022 Real file-manager engine: folders open instantly\n\u2022 File access is now checked live - the app locks until access is allowed\n\u2022 Save and extract into any folder on your phone\n\u2022 Text & code editor with colours\n\u2022 Preview files inside archives without extracting\n\u2022 Safer buttons, pull-to-refresh and faster lists\nMade by Havenova X - havenovax.name.ng",
+      "title": "StegZ for Android 1.4",
+      "message": "\u2022 Default save folder: Downloads/StegZ - change it any time in Settings\n\u2022 Save-to choice in Hide/Extract is one-time and returns to your Settings folder\n\u2022 Task progress in the status bar, with notification permission\n\u2022 Run-in-background (battery unrestricted) and a permissions checklist\n\u2022 Files tab remembers your folder - Back no longer reloads from the start\n\u2022 Credits: Made by Havenova X (havenovax.name.ng)",
       "level": "success",
       "button": "Get the update",
       "url": "https://stegzpc.vercel.app/",
       "show_once": true,
       "min_version": "",
-      "max_version": "1.2.1",
+      "max_version": "1.3.0",
       "expires": ""
     }
   ]
