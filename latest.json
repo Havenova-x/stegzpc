@@ -1,18 +1,18 @@
 {
-  "version": "1.3.0",
-  "released": "2026-10-23",
+  "version": "1.4.0",
+  "released": "2026-10-28",
   "mandatory": false,
   "min_check_interval": 1200,
   "notes": [
-    "Built-in text and code editor with syntax highlighting (Edit button, or double-click a text file)",
-    "Preview pictures and text inside any archive without extracting (never uses up a self-destruct open)",
-    "Opening an archive now lists its files straight away - no extra click",
-    "Faster, more reliable update and announcement checks"
+    "Credits to Havenova X in Settings (click to visit havenovax.name.ng)",
+    "Announcements now have a \"Don't show this again\" option",
+    "Ad banner support (ads.json) shown under the toolbar, with a close button",
+    "Text editor, archive previews and instant archive opening from 1.3"
   ],
   "windows": {
-    "url": "https://github.com/Havenova-x/stegzpc/releases/download/v1.3.0/StegZ-Setup.exe",
-    "sha256": "dd5742872af6ca2b3e8e83c73c56aea0b9d0415b2afaae4c3f3f34666ed98a12",
-    "size": 43224944
+    "url": "https://github.com/Havenova-x/stegzpc/releases/download/v1.4.0/StegZ-Setup.exe",
+    "sha256": "fa49cf32613f6ad69cf03773fdc32c70d11c534f12ea39abaf6b9ec4350711a8",
+    "size": 43224079
   },
   "android": {
     "url": "",
