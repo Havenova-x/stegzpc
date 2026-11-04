@@ -16,10 +16,10 @@
     },
     {
       "active": true,
-      "id": "2026-11-android-2.3.0",
+      "id": "2026-11-android-2.4.0",
       "platform": "android",
-      "title": "StegZ 2.3 for Android",
-      "message": "\u2022 Task popups with Hide/Cancel, a Tasks screen and live notifications\n\u2022 Search and sort in every file chooser; create files and folders\n\u2022 Hidden pictures and extracted media appear in your Gallery\n\u2022 StegZ now shows in \"Open with\" and Share (\"Locate file\")\n\u2022 Text/code editor, PDF, audio, video and image viewers, OBB install, Help guide\nMade by Havenova X",
+      "title": "StegZ 2.4 for Android",
+      "message": "\u2022 Installed apps: extract APKs (even split apps), open, uninstall\n\u2022 APK info and install: package, version, permissions, signature\n\u2022 Shred files and remove photo data (GPS, camera) for real privacy\n\u2022 Search inside text and code files\nMade by Havenova X",
       "level": "success",
       "button": "See the site",
       "url": "https://stegzpc.vercel.app/",
