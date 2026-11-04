@@ -16,10 +16,10 @@
     },
     {
       "active": true,
-      "id": "2026-10-27-android-2.2.0",
+      "id": "2026-11-android-2.3.0",
       "platform": "android",
-      "title": "StegZ 2.2 for Android",
-      "message": "\u2022 Rebuilt natively: files open instantly, with search and largest-files finder\n\u2022 Hide files in pictures or .stegz files, with a password tick-box and self-destruct\n\u2022 Open text/code (with colours), images, PDF, audio and video inside the app\n\u2022 ZIP, 7z, TAR, GZ, BZ2 and XZ: any size, live progress and notifications\n\u2022 New: optional \"Support us\" screen\nMade by Havenova X - havenovax.name.ng",
+      "title": "StegZ 2.3 for Android",
+      "message": "\u2022 Task popups with Hide/Cancel, a Tasks screen and live notifications\n\u2022 Search and sort in every file chooser; create files and folders\n\u2022 Hidden pictures and extracted media appear in your Gallery\n\u2022 StegZ now shows in \"Open with\" and Share (\"Locate file\")\n\u2022 Text/code editor, PDF, audio, video and image viewers, OBB install, Help guide\nMade by Havenova X",
       "level": "success",
       "button": "See the site",
       "url": "https://stegzpc.vercel.app/",
