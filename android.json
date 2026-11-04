@@ -1,8 +1,8 @@
 {
-  "version": "2.4.0",
-  "versionCode": 20007,
-  "url": "https://github.com/Havenova-x/stegzpc/releases/download/android-v2.4.0/StegZ.apk",
-  "sha256": "748b44dc2411e6938fef2416a7675a7c2b9012af4d0a0f4d2906c84589b9fa51",
-  "size": 15788009,
+  "version": "2.4.1",
+  "versionCode": 20008,
+  "url": "https://github.com/Havenova-x/stegzpc/releases/download/android-v2.4.1/StegZ.apk",
+  "sha256": "f2987099326a4448106379ec99246dd6dbb3ec598db9f18b151177fb734745fe",
+  "size": 15815996,
   "released": "2026-11-04"
 }
