@@ -2,6 +2,20 @@
   "announcements": [
     {
       "active": true,
+      "id": "2026-11-update-reinstall",
+      "platform": "android",
+      "title": "Update to StegZ 2.4.1",
+      "min_version": "",
+      "max_version": "2.4.0",
+      "message": "A new StegZ (version 2.4.1) is ready, with a faster app, more tools and fixes.\n\nIf Android says \"App not installed\" or refuses to update, do this once:\n1. Press and hold the StegZ icon, then tap Uninstall.\n2. Download StegZ again from the website and install it.\n\nYour hidden pictures and saved files are NOT lost - they are stored in your phone's folders (like Downloads/StegZ), not inside the app. Only the app's small settings reset.\n\nAfter this one-time step, every future update installs normally on top.",
+      "level": "warning",
+      "button": "Get StegZ 2.4.1",
+      "url": "https://stegzpc.vercel.app/",
+      "show_once": true,
+      "expires": ""
+    },
+    {
+      "active": true,
       "id": "2026-10-27-v1.4.0",
       "platform": "windows",
       "title": "StegZ 1.4 for Windows",
