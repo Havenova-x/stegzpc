@@ -16,16 +16,16 @@
     },
     {
       "active": true,
-      "id": "2026-10-27-v1.4.0",
+      "id": "2026-11-v1.5.0",
       "platform": "windows",
-      "title": "StegZ 1.4 for Windows",
-      "message": "\u2022 Credits to Havenova X in Settings (click to visit)\n\u2022 \"Don't show this again\" on announcements\n\u2022 Text editor, archive previews and instant archive opening\nTip: press F1 for the Help guide.",
+      "title": "StegZ 1.5 for Windows",
+      "min_version": "",
+      "max_version": "1.4.99",
+      "message": "\u2022 Right-click Extract here / Extract to <archive name> now shows a progress window instantly and works in the background\n\u2022 Zip files unpack on several processor cores, with real progress\n\u2022 New Search (Ctrl+F), Biggest files, Properties with SHA-256\n\u2022 New Power Tools: duplicate finder, bulk rename, hidden-data scanner, checksums, split & join, password generator, cleanup\n\u2022 Shred files and remove GPS/camera data from photos\nTip: the Help button explains everything.",
       "level": "success",
       "button": "See what's new",
-      "url": "https://stegzpc.vercel.app/",
+      "url": "https://stegzpc.vercel.app/changelog.html",
       "show_once": true,
-      "min_version": "",
-      "max_version": "",
       "expires": ""
     },
     {
