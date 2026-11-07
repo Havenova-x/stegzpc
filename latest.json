@@ -1,18 +1,23 @@
 {
-  "version": "1.4.0",
-  "released": "2026-10-28",
+  "version": "1.5.0",
+  "released": "2026-11-07",
   "mandatory": false,
   "min_check_interval": 1200,
   "notes": [
+    "Much faster right-click Extract here / Extract to <archive name>: a progress window appears instantly and extraction runs in the background (zip files unpack on several processor cores, with real byte-by-byte progress and original file dates)",
+    "Faster start: the app now installs as a folder instead of a self-unpacking file",
+    "New Search (Ctrl+F) with recent searches, search inside text files, and a Biggest files finder",
+    "New Power Tools window: duplicate finder, bulk rename, hidden-data scanner for pictures, checksums with Verify, split and join big files, password generator, empty-folder cleanup",
+    "New right-click tools: Properties with SHA-256, Copy path, Show in Explorer, Shred (secure delete), Remove photo data (GPS and camera), Compress to .tar.gz, New folder",
     "Credits to Havenova X in Settings (click to visit havenovax.name.ng)",
     "Announcements now have a \"Don't show this again\" option",
     "Ad banner support (ads.json) shown under the toolbar, with a close button",
     "Text editor, archive previews and instant archive opening from 1.3"
   ],
   "windows": {
-    "url": "https://github.com/Havenova-x/stegzpc/releases/download/v1.4.0/StegZ-Setup.exe",
-    "sha256": "fa49cf32613f6ad69cf03773fdc32c70d11c534f12ea39abaf6b9ec4350711a8",
-    "size": 43224079
+    "url": "https://github.com/Havenova-x/stegzpc/releases/download/v1.5.0/StegZ-Setup.exe",
+    "sha256": "0bbee7577f17adeb3e9fed1dc6fc6f6403475c5ef0c19795b451299d1818e1e9",
+    "size": 30977090
   },
   "android": {
     "url": "",
